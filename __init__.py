@@ -87,7 +87,7 @@ class FoxESSCloudSkill(OVOSSkill):
         value = str(value).replace(".",self.lang_specifics['decimal_char'])
         self.speak_dialog('current_delivery', {'energy_delivery': value})
 
-    @intent_handler('current_loads.intent')
+    @intent_handler('current_consumption.intent')
     def handle_current_consumption(self, message):
         selection = "loadsPower"
         result = self.realdata(selection)
