@@ -1,0 +1,4 @@
+foxesscloud@git+https://github.com/TonyM1958/FoxESS-Cloud
+requests
+matplotlib
+numpy
