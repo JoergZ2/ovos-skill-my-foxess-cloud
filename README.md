@@ -30,9 +30,9 @@ You have to edit settings.json of the skill. You will find it in your config fol
 "device_sn": ask your supplier or installer.
 "time_zone": self explaining, isn't it?
 "lang_specifics": In this skill only "decimal_char" is used. All digit values from FoxESS cloud are of type 'float'. For some countries - e. g. Germany - the decimal point is a comma (,). For correct speaking the point from float has to change to comma. If you don't need replacing, let "." as decimal point (default).  
-##Sources and more information
-https://github.com/TonyM1958/FoxESS-Cloud
-https://github.com/macxq/foxess-ha/wiki/Understand-PV-string-power-generation-using-foxess-ha
+## Sources and more information
+https://github.com/TonyM1958/FoxESS-Cloud/
+https://github.com/macxq/foxess-ha/wiki/Understand-PV-string-power-generation-using-foxess-ha/
 https://foxesscommunity.com/
 ## Questions and issues
 Use "Issues" from this github pages.
