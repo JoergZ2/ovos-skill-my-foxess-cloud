@@ -97,7 +97,6 @@ class FoxESSCloudSkill(OVOSSkill):
         selection = "pvPower"
         result = self.realdata(selection)
         value = str(result[0]['value']).replace(".",self.lang_specifics['decimal_char'])
-        LOG.info("Result ist: " + str(result[0]) + " value ist: " + str(value))
         self.speak_dialog('current_pvpower',{'current_energy': value})
     
     @intent_handler('current_delivery.intent')
