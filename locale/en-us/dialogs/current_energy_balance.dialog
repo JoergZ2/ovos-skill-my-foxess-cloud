@@ -1,0 +1,1 @@
+The solar system currently supplies {pvPower} kilowatts. From this, the inverter generates {generationPower} k w. The energy consumption is {loadsPower} kilowatts. {gridConsumptionPower} is drawn from the power grid. Kilowatts {feedinPower} are fed in. The battery is charged with {batChargePower} kilowatts. The discharge is {batDischargePower} kilowatts.

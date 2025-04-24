@@ -1,0 +1,9 @@
+{
+    "__mycroft_skill_firstrun": false,
+    "api_key": "Your_API_Key",
+    "device_sn": "Your_inverter_serial_number",
+    "time_zone": "Europe/Berlin",
+    "lang_specifics": {
+        "decimal_char": ","
+    }
+}

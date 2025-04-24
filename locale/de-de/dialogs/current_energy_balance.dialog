@@ -1,0 +1,1 @@
+aktuell liefert die solaranlage {pvPower} Kilowatt. Daraus erzeugt der Wechselrichter {generationPower} k w. Der Energieverbrauch beträgt {loadsPower} Kilowatt. Aus dem Strometz werden {gridConsumptionPower} bezogen. Eingespeist werden {feedinPower} Kilowatt. Die Batterie wird mit {batChargePower} Kilowatt aufgeladen. Die Entladung beträgt {batDischargePower} Kilowatt.
