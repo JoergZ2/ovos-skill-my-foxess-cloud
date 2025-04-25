@@ -173,7 +173,7 @@ class FoxESSCloudSkill(OVOSSkill):
         selection = ["pvPower"]
         day = message.data.get('day')
         LOG.info("Day ist: " + str(day))
-        day = extract_datetime(day)
+        day = extract_datetime(day, lang="de")
         LOG.info("Extract day ist: " + str(day))
         day = day.strftime("%Y-%m-%d")
         LOG.info("Day ist nun: " + day)
