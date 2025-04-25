@@ -81,7 +81,7 @@ class FoxESSCloudSkill(OVOSSkill):
     def round3_reportdata(self,result):
         """Function rounds long float to 3 digits after decimal point"""
         if len(result) == 1:
-            result = round(result[0]['total'], 3)
+            result[0]['total'] = round(result[0]['total'], 3)
             return result
         i = 0
         while i < len(result):
