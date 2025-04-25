@@ -172,10 +172,12 @@ class FoxESSCloudSkill(OVOSSkill):
     def handle_past_values(self, message):
         selection = ["pvPower"]
         day = message.data.get('day')
+        utterance = message.data.get('utterance')
+        LOG.info("Utterance: " + utterance)
         LOG.info("Day ist: " + str(day))
         day = extract_datetime(day, lang="de")
         LOG.info("Extract day ist: " + str(day))
-        day = day.strftime("%Y-%m-%d")
+        day = day[0].strftime("%Y-%m-%d")
         LOG.info("Day ist nun: " + day)
         result = self.datareport(selection, day)
         LOG.info("Result ist: " + str(result))
