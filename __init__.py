@@ -171,7 +171,7 @@ class FoxESSCloudSkill(OVOSSkill):
     @intent_handler('values_from_past.intent')
     def handle_past_values(self, message):
         selection = ["pvPower"]
-        day = message['day']
+        day = message.data.get('day')
         LOG.info("Day ist: " + str(day))
         day = extract_datetime(day)
         LOG.info("Extract day ist: " + str(day))
