@@ -91,7 +91,7 @@ class FoxESSCloudSkill(OVOSSkill):
         return result
 
     def datareport(self,selection, day):
-        result = f.get_report(t="day", d=day,v=selection, summary=2)
+        result = f.get_report("day", day,selection,2)
         return result
     
     #Intents
