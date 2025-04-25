@@ -4,6 +4,7 @@ from ovos_utils.process_utils import RuntimeRequirements
 from ovos_workshop.decorators import intent_handler
 from ovos_workshop.skills import OVOSSkill
 from ovos_bus_client.session import SessionManager
+from ovos_date_parser import extract_datetime
 from threading import Event
 import foxesscloud.openapi as f
 import json
@@ -89,6 +90,9 @@ class FoxESSCloudSkill(OVOSSkill):
             i += 1
         return result
 
+    def datareport(self,selection, day):
+        result = f.get_report(t="day", d=day,v=selection, summary=2)
+        return result
     
     #Intents
     @intent_handler('current_pvpower.intent')
@@ -163,3 +167,15 @@ class FoxESSCloudSkill(OVOSSkill):
                                                      'loadsPower': values['loadsPower'], 'gridConsumptionPower': values['gridConsumptionPower'], \
                                                         'batDischargePower': values['batDischargePower'], 'generationPower': values['generationPower'], \
                                                             'feedinPower': values['feedinPower']})
+        
+    @intent_handler('values_from_past.intent')
+    def handle_past_values(self, message):
+        selection = ["pvPower"]
+        day = message['day']
+        LOG.info("Day ist: " + str(day))
+        day = extract_datetime(day)
+        LOG.info("Extract day ist: " + str(day))
+        day = day.strftime("%Y-%m-%d")
+        LOG.info("Day ist nun: " + day)
+        result = self.datareport(selection, day)
+        LOG.info("Result ist: " + str(result))
