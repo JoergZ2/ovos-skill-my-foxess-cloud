@@ -78,6 +78,18 @@ class FoxESSCloudSkill(OVOSSkill):
             i += 1
         return result
     
+    def round3_reportdata(self,result):
+        """Function rounds long float to 3 digits after decimal point"""
+        if len(result) == 1:
+            result = round(result[0]['total'], 3)
+            return result
+        i = 0
+        while i < len(result):
+            result[i]['values'] = round(result[i]['values'], 3)
+            result[i]['total'] = round([i]['total'], 3)
+            i += 1
+        return result
+    
     def prepare_values(self, selection,values):
         """Function for localization and to prepare a dict of values for TTS"""
         result = {}
@@ -175,7 +187,7 @@ class FoxESSCloudSkill(OVOSSkill):
         day = extract_datetime(day, lang="de")
         day = day[0].strftime("%Y-%m-%d")
         result = self.datareport(selection, day)
-        result = self.round3_realdata(result)
+        result = self.round3_reportdata(result)
         value = str(result[0]['total']).replace(".",self.lang_specifics['decimal_char'])
         LOG.info("Result ist: " + str(result))
         self.speak_dialog('values_from_past', {"value": value})
