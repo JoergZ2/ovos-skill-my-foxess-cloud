@@ -175,5 +175,7 @@ class FoxESSCloudSkill(OVOSSkill):
         day = extract_datetime(day, lang="de")
         day = day[0].strftime("%Y-%m-%d")
         result = self.datareport(selection, day)
+        value = result[0]['total']
+        value = self.round3_realdata(value)
         LOG.info("Result ist: " + str(result))
-        self.speak_dialog('values_from_past', {"value": result[0]['total']})
+        self.speak_dialog('values_from_past', {"value": value})
