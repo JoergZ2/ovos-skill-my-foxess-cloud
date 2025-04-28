@@ -49,10 +49,10 @@ class FoxESSCloudSkill(OVOSSkill):
         f.api_key = self.settings.get("api_key", None)
         f.device_sn = self.settings.get("device_sn", None)
         f.time_zone = self.settings.get("time_zone", None)
-        pv = f.power_vars
-        bv = f.battery_vars
-        ev = f.energy_vars
-        rv = f.report_vars
+        self.pv = f.power_vars
+        self.bv = f.battery_vars
+        self.ev = f.energy_vars
+        self.rv = f.report_vars
         self.lang_specifics = self.settings.get("lang_specifics", None)
 
     def on_settings_changed(self):
@@ -188,7 +188,7 @@ class FoxESSCloudSkill(OVOSSkill):
     @intent_handler('values_from_past.intent')
     def handle_past_values(self, message):
         """Returns sums of prodauction, loads and export/import from a single day in the past < one year"""
-        selection = rv
+        selection = self.rv
         day = message.data.get('day')
         day = extract_datetime(day, lang="de")
         day = day[0].strftime("%Y-%m-%d")
