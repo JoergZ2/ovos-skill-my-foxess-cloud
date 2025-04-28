@@ -49,6 +49,10 @@ class FoxESSCloudSkill(OVOSSkill):
         f.api_key = self.settings.get("api_key", None)
         f.device_sn = self.settings.get("device_sn", None)
         f.time_zone = self.settings.get("time_zone", None)
+        pv = f.power_vars
+        bv = f.battery_vars
+        ev = f.energy_vars
+        rv = f.report_vars
         self.lang_specifics = self.settings.get("lang_specifics", None)
 
     def on_settings_changed(self):
@@ -162,6 +166,7 @@ class FoxESSCloudSkill(OVOSSkill):
 
     @intent_handler('current_inv_bat_charge.intent')
     def handle_current_inv_bat_charge(self, message):
+        """Returns current battery fill state"""
         selection = "batChargePower"
         result = self.realdata(selection)
         value = str(result[0]['value']).replace(".",self.lang_specifics['decimal_char'])
@@ -182,11 +187,13 @@ class FoxESSCloudSkill(OVOSSkill):
         
     @intent_handler('values_from_past.intent')
     def handle_past_values(self, message):
-        selection = ["generation"]
+        """Returns sums of prodauction, loads and export/import from a single day in the past < one year"""
+        selection = rv
         day = message.data.get('day')
         day = extract_datetime(day, lang="de")
         day = day[0].strftime("%Y-%m-%d")
         result = self.datareport(selection, day)
-        result = self.round3_reportdata(result)
-        value = str(result[0]['total']).replace(".",self.lang_specifics['decimal_char'])
-        self.speak_dialog('values_from_past', {"value": value})
+        values = self.round3_reportdata(result)
+        values = self.prepare_values(selection, values)
+        LOG.info("Values from HANDLE_PAST_VALUES intent: " + str(values))
+        #self.speak_dialog('values_from_past', {"value": value})
