@@ -98,6 +98,8 @@ class FoxESSCloudSkill(OVOSSkill):
            
     def prepare_values(self, selection,values):
         """Function for localization and to prepare a dict of values for TTS"""
+        LOG.info("Var selection is: " +str(selection))
+        LOG.info("Var values is: " + str(values))
         result = {}
         i = 0
         while i < len(selection):
@@ -111,7 +113,10 @@ class FoxESSCloudSkill(OVOSSkill):
     def datareport(self,selection, day):
         result = f.get_report("day", day,selection,2)
         return result
-    
+
+    def calculate_reportdate(self,result):
+        """Function which calcualtes quotes of self use and self consumption"""
+
     #Intents
     @intent_handler('current_pvpower.intent')
     def handle_current_pvpower(self, message):
