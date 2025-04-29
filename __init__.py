@@ -89,11 +89,13 @@ class FoxESSCloudSkill(OVOSSkill):
             return result
         i = 0
         while i < len(result):
-            result[i]['values'] = round(result[i]['values'], 3)
-            result[i]['total'] = round([i]['total'], 3)
+            if len(result[i]['values']) > 0:
+                result[i]['values'] = round(result[i]['values'], 3)
+            if result[i]['total'] > 0:
+                result[i]['total'] = round(result[i]['total'], 3)
             i += 1
         return result
-    
+           
     def prepare_values(self, selection,values):
         """Function for localization and to prepare a dict of values for TTS"""
         result = {}

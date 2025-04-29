@@ -1,1 +1,1 @@
-es sind {value} Kilowattstunden erzeugt worden. 
+an dem tag sind {PVEnergyTotal} Kilowatt stunden erzeugt worden. Davon sind {feedin} ins netz eingespeist und {loads} selbst verbraucht worden. Bezogen wurden {gridConsumption} Kiöowatt stunden.
