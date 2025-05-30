@@ -103,11 +103,11 @@ class FoxESSCloudSkill(OVOSSkill):
         result = {}
         i = 0
         while i < len(selection):
-            if len(values[i]['value']) > 0:
-                new_value = values[i]['value']
+            if len(values[i]['values']) > 0:
+                new_value = values[i]['values']
                 new_value = str(new_value).replace(".",self.lang_specifics['decimal_char'])
-                values[i]['value'] = new_value
-                result.update({selection[i]: str(values[i]['value'])})
+                values[i]['values'] = new_value
+                result.update({selection[i]: str(values[i]['values'])})
                 i += 1
             if len(values[i]['total']) > 0:
                 new_value = values[i]['total']
