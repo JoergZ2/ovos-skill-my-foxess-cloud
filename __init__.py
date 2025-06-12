@@ -127,7 +127,7 @@ class FoxESSCloudSkill(OVOSSkill):
                 result.update({selection[i]: str(values[i]['values'])})
                 i += 1
             if values[i]['total']:
-                LOG.info("Field total is processed")
+                LOG.debug("Field total is processed")
                 new_value = values[i]['total']
                 new_value = str(new_value).replace(".",self.lang_specifics['decimal_char'])
                 values[i]['total'] = new_value
