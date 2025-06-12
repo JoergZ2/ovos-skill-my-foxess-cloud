@@ -115,18 +115,19 @@ class FoxESSCloudSkill(OVOSSkill):
            
     def prepare_values(self, selection,values):
         """Function for localization and to prepare a dict of values for TTS"""
-        LOG.info("Vars selection are: " +str(selection))
-        LOG.info("Vars values are: " + str(values))
+        LOG.debug("Vars selection are: " +str(selection))
+        LOG.debug("Vars values are: " + str(values))
         result = {}
         i = 0
         while i < len(selection):
-            if len(values[i]['values']) > 0:
+            if values[i]['values']:
                 new_value = values[i]['values']
                 new_value = str(new_value).replace(".",self.lang_specifics['decimal_char'])
                 values[i]['values'] = new_value
                 result.update({selection[i]: str(values[i]['values'])})
                 i += 1
-            if len(values[i]['total']) > 0:
+            if values[i]['total']:
+                LOG.info("Field total is processed")
                 new_value = values[i]['total']
                 new_value = str(new_value).replace(".",self.lang_specifics['decimal_char'])
                 values[i]['total'] = new_value
@@ -150,11 +151,11 @@ class FoxESSCloudSkill(OVOSSkill):
         result = self.datareport(selection, day)
         values = self.round3_reportdata(result)
         values = self.prepare_values(selection, values)
-        LOG.info("Values from HANDLE_ENERGY_YESTERDAY intent: " + str(values))
-        self.speak_dialog('energy_yesterday', {'pvPower': values['pvPower'], 'batChargePower': values['batChargePower'], \
-                                               'loadsPower': values['loadsPower'], 'gridConsumptionPower': values['gridConsumptionPower'], \
-                                                'batDischargePower': values['batDischargePower'], 'generationPower': values['generationPower'], \
-                                                    'feedinPower': values['feedinPower']})
+        LOG.debug("Values from HANDLE_ENERGY_YESTERDAY intent: " + str(values))
+        self.speak_dialog('energy_yesterday', {'chargeEnergyTotal': values['chargeEnergyToTal'], \
+                                               'loads': values['loads'], 'gridConsumption': values['gridConsumption'], \
+                                                'dischargeEnergyTotal': values['dischargeEnergyToTal'], 'generation': values['generation'], \
+                                                    'feedin': values['feedin'], 'PVEnergyTotal': values['PVEnergyTotal']})
 
     @intent_handler('current_pvpower.intent')
     def handle_current_pvpower(self, message):
