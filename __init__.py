@@ -73,14 +73,14 @@ class FoxESSCloudSkill(OVOSSkill):
         return result
     
     #Helpers
-    def current_day(today):
+    def current_day(self, today):
         """
         Returns date of today as string.
         """
         day = today.strftime("%Y-%m-%d")
         return day
 
-    def yesterday(today):
+    def yesterday(self, today):
         """
         Returns date of yesterday as string.
         """
