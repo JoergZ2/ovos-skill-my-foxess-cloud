@@ -5,10 +5,12 @@ from ovos_workshop.decorators import intent_handler
 from ovos_workshop.skills import OVOSSkill
 from ovos_bus_client.session import SessionManager
 from ovos_date_parser import extract_datetime
+import datetime as dt
 from threading import Event
 import foxesscloud.openapi as f
 import json
 #Just a comment
+today = dt.date.today()
 power_vars = f.power_vars
 battery_vars = f.battery_vars
 energy_vars = f.energy_vars
@@ -71,6 +73,21 @@ class FoxESSCloudSkill(OVOSSkill):
         return result
     
     #Helpers
+    def current_day(today):
+        """
+        Returns date of today as string.
+        """
+        day = today.strftime("%Y-%m-%d")
+        return day
+
+    def yesterday(today):
+        """
+        Returns date of yesterday as string.
+        """
+        day = today.replace(day=today.day-1)
+        day = day.strftime("%Y-%m-%d")
+        return day
+
     def round3_realdata(self,result):
         """Function rounds long float to 3 digits after decimal point"""
         if len(result) == 1:
@@ -125,6 +142,20 @@ class FoxESSCloudSkill(OVOSSkill):
         """Function which calcualtes quotes of self use and self consumption"""
 
     #Intents
+    @intent_handler('energy_yesterday.intent')
+    def handle_energy_yesterday(self, message):
+        """Returns energy production, consumption and export/import from yesterday"""
+        selection = self.rv
+        day = self.yesterday(today)
+        result = self.datareport(selection, day)
+        values = self.round3_reportdata(result)
+        values = self.prepare_values(selection, values)
+        LOG.info("Values from HANDLE_ENERGY_YESTERDAY intent: " + str(values))
+        self.speak_dialog('energy_yesterday', {'pvPower': values['pvPower'], 'batChargePower': values['batChargePower'], \
+                                               'loadsPower': values['loadsPower'], 'gridConsumptionPower': values['gridConsumptionPower'], \
+                                                'batDischargePower': values['batDischargePower'], 'generationPower': values['generationPower'], \
+                                                    'feedinPower': values['feedinPower']})
+
     @intent_handler('current_pvpower.intent')
     def handle_current_pvpower(self, message):
         """Returns photovoltaic output data"""
