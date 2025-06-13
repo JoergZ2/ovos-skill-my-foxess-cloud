@@ -4,7 +4,7 @@ from ovos_utils.process_utils import RuntimeRequirements
 from ovos_workshop.decorators import intent_handler
 from ovos_workshop.skills import OVOSSkill
 from ovos_bus_client.session import SessionManager
-from ovos_date_parser import extract_datetime
+from ovos_date_parser import extract_datetime, nice_date
 import datetime as dt
 from threading import Event
 import foxesscloud.openapi as f
@@ -166,15 +166,14 @@ class FoxESSCloudSkill(OVOSSkill):
         day = message.data.get('date')
         LOG.info("'date' is: " + str(day))
         day = extract_datetime(day, lang="de")
+        day_to_speak = nice_day(day[0])
         day = day[0].strftime("%Y-%m-%d")
         result = self.datareport(duration, selection, day)
         values = self.round3_reportdata(result)
         values = self.prepare_values(selection, values)
         LOG.info("Values from HANDLE_ENERGY_ANY_DAY intent: " + str(values))
-        self.speak_dialog('energy_yesterday', {'chargeEnergyTotal': values['chargeEnergyToTal'], \
-                                               'loads': values['loads'], 'gridConsumption': values['gridConsumption'], \
-                                                'dischargeEnergyTotal': values['dischargeEnergyToTal'], 'generation': values['generation'], \
-                                                    'feedin': values['feedin'], 'PVEnergyTotal': values['PVEnergyTotal']})
+        self.speak_dialog('values_from_past', {'day_to_speak': day_to_speak, 'loads': values['loads'], 'gridConsumption': values['gridConsumption'], 'generation': values['generation'], \
+                                                    'feedin': values['feedin']})
 
     @intent_handler('current_pvpower.intent')
     def handle_current_pvpower(self, message):
