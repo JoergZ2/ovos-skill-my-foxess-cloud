@@ -88,6 +88,10 @@ class FoxESSCloudSkill(OVOSSkill):
         day = day.strftime("%Y-%m-%d")
         return day
 
+    def any_day(self, nr):
+        return
+    
+
     def round3_realdata(self,result):
         """Function rounds long float to 3 digits after decimal point"""
         if len(result) == 1:
@@ -127,7 +131,7 @@ class FoxESSCloudSkill(OVOSSkill):
                 result.update({selection[i]: str(values[i]['values'])})
                 i += 1
             if values[i]['total']:
-                LOG.debug("Field total is processed")
+                LOG.debug("Field 'total' is processed")
                 new_value = values[i]['total']
                 new_value = str(new_value).replace(".",self.lang_specifics['decimal_char'])
                 values[i]['total'] = new_value
@@ -135,8 +139,8 @@ class FoxESSCloudSkill(OVOSSkill):
                 i += 1
         return result
 
-    def datareport(self,selection, day):
-        result = f.get_report("day", day,selection,2)
+    def datareport(self,duration, selection, day):
+        result = f.get_report(duration, day,selection,2)
         return result
 
     def calculate_reportdate(self,result):
@@ -147,11 +151,29 @@ class FoxESSCloudSkill(OVOSSkill):
     def handle_energy_yesterday(self, message):
         """Returns energy production, consumption and export/import from yesterday"""
         selection = self.rv
+        duration = "day"
         day = self.yesterday(today)
-        result = self.datareport(selection, day)
+        result = self.datareport(duration, selection, day)
         values = self.round3_reportdata(result)
         values = self.prepare_values(selection, values)
         LOG.debug("Values from HANDLE_ENERGY_YESTERDAY intent: " + str(values))
+        self.speak_dialog('energy_yesterday', {'chargeEnergyTotal': values['chargeEnergyToTal'], \
+                                               'loads': values['loads'], 'gridConsumption': values['gridConsumption'], \
+                                                'dischargeEnergyTotal': values['dischargeEnergyToTal'], 'generation': values['generation'], \
+                                                    'feedin': values['feedin'], 'PVEnergyTotal': values['PVEnergyTotal']})
+
+    @intent_handler('energy_any_day.intent')
+    def handle_energy_any_day(self, message):
+        """Returns energy production, consumption and export/import from a single day in the past < one year"""
+        selection = self.rv
+        duration = "day"
+        day = message.data.get('date')
+        day = extract_datetime(day, lang="de")
+        day = day[0].strftime("%Y-%m-%d")
+        result = self.datareport(duration, selection, day)
+        values = self.round3_reportdata(result)
+        values = self.prepare_values(selection, values)
+        LOG.info("Values from HANDLE_ENERGY_ANY_DAY intent: " + str(values))
         self.speak_dialog('energy_yesterday', {'chargeEnergyTotal': values['chargeEnergyToTal'], \
                                                'loads': values['loads'], 'gridConsumption': values['gridConsumption'], \
                                                 'dischargeEnergyTotal': values['dischargeEnergyToTal'], 'generation': values['generation'], \
@@ -231,14 +253,15 @@ class FoxESSCloudSkill(OVOSSkill):
                                                         'batDischargePower': values['batDischargePower'], 'generationPower': values['generationPower'], \
                                                             'feedinPower': values['feedinPower']})
         
-    @intent_handler('values_from_past.intent')
+    @intent_handler('values_of_date.intent')
     def handle_past_values(self, message):
         """Returns sums of prodauction, loads and export/import from a single day in the past < one year"""
         selection = self.rv
+        duration = "day"
         day = message.data.get('day')
         day = extract_datetime(day, lang="de")
         day = day[0].strftime("%Y-%m-%d")
-        result = self.datareport(selection, day)
+        result = self.datareport(duration, selection, day)
         values = self.round3_reportdata(result)
         values = self.prepare_values(selection, values)
         LOG.info("Values from HANDLE_PAST_VALUES intent: " + str(values))
