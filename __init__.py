@@ -165,13 +165,13 @@ class FoxESSCloudSkill(OVOSSkill):
         duration = "day"
         day = message.data.get('date')
         LOG.info("'date' is: " + str(day))
-        day = extract_datetime(day, lang="de")
-        day_to_speak = nice_day(day[0])
+        day = extract_datetime(day, lang=self.lang)
+        day_to_speak = nice_date(day[0],lang=self.lang)
         day = day[0].strftime("%Y-%m-%d")
         result = self.datareport(duration, selection, day)
         values = self.round3_reportdata(result)
         values = self.prepare_values(selection, values)
-        LOG.info("Values from HANDLE_ENERGY_ANY_DAY intent: " + str(values))
+        LOG.debug("Values from HANDLE_ENERGY_ANY_DAY intent: " + str(values))
         self.speak_dialog('values_from_past', {'day_to_speak': day_to_speak, 'loads': values['loads'], 'gridConsumption': values['gridConsumption'], 'generation': values['generation'], \
                                                     'feedin': values['feedin']})
 
