@@ -88,10 +88,6 @@ class FoxESSCloudSkill(OVOSSkill):
         day = day.strftime("%Y-%m-%d")
         return day
 
-    def any_day(self, nr):
-        return
-    
-
     def round3_realdata(self,result):
         """Function rounds long float to 3 digits after decimal point"""
         if len(result) == 1:
@@ -168,6 +164,7 @@ class FoxESSCloudSkill(OVOSSkill):
         selection = self.rv
         duration = "day"
         day = message.data.get('date')
+        LOG.info("'date' is: " + str(day))
         day = extract_datetime(day, lang="de")
         day = day[0].strftime("%Y-%m-%d")
         result = self.datareport(duration, selection, day)
