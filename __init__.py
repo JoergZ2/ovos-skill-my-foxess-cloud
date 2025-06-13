@@ -33,7 +33,7 @@ class FoxESSCloudSkill(OVOSSkill):
     @classproperty
     def runtime_requirements(self):
         return RuntimeRequirements(
-            internet_before_load=False,
+            internet_before_load=True,
             network_before_load=False,
             gui_before_load=False,
             requires_internet=False,
@@ -115,24 +115,18 @@ class FoxESSCloudSkill(OVOSSkill):
            
     def prepare_values(self, selection,values):
         """Function for localization and to prepare a dict of values for TTS"""
-        LOG.debug("Vars selection are: " +str(selection))
-        LOG.debug("Vars values are: " + str(values))
         result = {}
-        i = 0
-        while i < len(selection):
+        for i in range(len(selection)):
             if values[i]['values']:
                 new_value = values[i]['values']
                 new_value = str(new_value).replace(".",self.lang_specifics['decimal_char'])
                 values[i]['values'] = new_value
                 result.update({selection[i]: str(values[i]['values'])})
-                i += 1
-            if values[i]['total']:
-                LOG.debug("Field 'total' is processed")
+            if values[i]['total'] != None:
                 new_value = values[i]['total']
                 new_value = str(new_value).replace(".",self.lang_specifics['decimal_char'])
                 values[i]['total'] = new_value
-                result.update({selection[i]: str(values[i]['total'])})
-                i += 1
+                result.update({values[i]['variable']: str(values[i]['total'])})
         return result
 
     def datareport(self,duration, selection, day):
