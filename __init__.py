@@ -88,6 +88,14 @@ class FoxESSCloudSkill(OVOSSkill):
         day = day.strftime("%Y-%m-%d")
         return day
 
+    def optional_day_from_past(self, today, number):
+        """
+        Returns date of a past day announcing an optional number of past days.
+        """
+        day = today.replace(day = today.day - int(number))
+        day = day.strftime("%Y-%m-%d")
+        return day
+    
     def round3_realdata(self,result):
         """Function rounds long float to 3 digits after decimal point"""
         if len(result) == 1:
@@ -136,6 +144,12 @@ class FoxESSCloudSkill(OVOSSkill):
     def calculate_reportdate(self,result):
         """Function which calcualtes quotes of self use and self consumption"""
 
+    def speakable_date(self,day):
+        """Function which returns a speakable date"""
+        day = extract_datetime(day, lang=self.lang)
+        day_to_speak = nice_date(day[0],lang=self.lang)
+        return day_to_speak
+    
     #Intents
     @intent_handler('energy_yesterday.intent')
     def handle_energy_yesterday(self, message):
@@ -152,6 +166,22 @@ class FoxESSCloudSkill(OVOSSkill):
                                                 'dischargeEnergyTotal': values['dischargeEnergyToTal'], 'generation': values['generation'], \
                                                     'feedin': values['feedin'], 'PVEnergyTotal': values['PVEnergyTotal']})
 
+    @intent_handler('energy_optional_day.intent')
+    def handle_energy_optional_day(self, message):
+        """Returns energy production, consumption and export/import from a single day in the past < one year"""
+        selection = self.rv
+        duration = "day"
+        number = message.data.get('number')
+        LOG.info("'number' is: " + str(number))
+        day = self.optional_day_from_past(today, number)
+        result = self.datareport(duration, selection, day)
+        values = self.round3_reportdata(result)
+        values = self.prepare_values(selection, values)
+        LOG.debug("Values from HANDLE_ENERGY_OPTIONAL_DAY intent: " + str(values))
+        day_to_speak = self.speakable_date(day)
+        self.speak_dialog('energy_optional_day', {'day': day_to_speak, 'number': number, 'loads': values['loads'], 'gridConsumption': values['gridConsumption'], 'generation': values['generation'], \
+                                                    'feedin': values['feedin']})
+        
     @intent_handler('energy_any_day.intent')
     def handle_energy_any_day(self, message):
         """Returns energy production, consumption and export/import from a single day in the past < one year"""
