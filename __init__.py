@@ -147,6 +147,7 @@ class FoxESSCloudSkill(OVOSSkill):
     def speakable_date(self,day):
         """Function which returns a speakable date"""
         day = extract_datetime(day, lang=self.lang)
+        LOG.info("Content of day in speakable_date: " + str(day))
         day_to_speak = nice_date(day[0],lang=self.lang)
         return day_to_speak
     
