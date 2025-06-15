@@ -168,7 +168,7 @@ class FoxESSCloudSkill(OVOSSkill):
         selection = self.rv
         duration = "day"
         number = message.data.get('number')
-        if number < today.day:
+        if int(number) < today.day:
             day_str = self.optional_day_from_past(today, number)
             result = self.datareport(duration, selection, day_str)
             values = self.round3_reportdata(result)
