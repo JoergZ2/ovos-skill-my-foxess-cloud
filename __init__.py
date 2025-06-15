@@ -148,8 +148,8 @@ class FoxESSCloudSkill(OVOSSkill):
     def speakable_date(self,today, number):
         """Function which returns a speakable date"""
         day = today.replace(day=today.day - int(number))
-        day = extract_datetime(day, lang=self.lang)
         LOG.info("Content of day in speakable_date: " + str(day))
+        day = extract_datetime(day, lang=self.lang)
         day_to_speak = nice_date(day[0],lang=self.lang)
         return day_to_speak
     
@@ -175,7 +175,6 @@ class FoxESSCloudSkill(OVOSSkill):
         selection = self.rv
         duration = "day"
         number = message.data.get('number')
-        LOG.info("'number' is: " + str(number))
         day_str = self.optional_day_from_past(today, number)
         result = self.datareport(duration, selection, day_str)
         values = self.round3_reportdata(result)
