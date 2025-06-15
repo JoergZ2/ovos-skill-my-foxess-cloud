@@ -174,7 +174,7 @@ class FoxESSCloudSkill(OVOSSkill):
         values = self.prepare_values(selection, values)
         LOG.debug("Values from HANDLE_ENERGY_OPTIONAL_DAY intent: " + str(values))
         self.speak_dialog('energy_optional_day', {'number': number, 'loads': values['loads'], 'gridConsumption': values['gridConsumption'], 'generation': values['generation'], \
-                                                    'feedin': values['feedin']})
+                                                    'dischargeEnergyTotal': values['dischargeEnergyToTal'], 'feedin': values['feedin']})
         
     @intent_handler('energy_any_day.intent')
     def handle_energy_any_day(self, message):
