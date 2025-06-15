@@ -96,6 +96,7 @@ class FoxESSCloudSkill(OVOSSkill):
         day = day.strftime("%Y-%m-%d")
         return day
     
+    
     def round3_realdata(self,result):
         """Function rounds long float to 3 digits after decimal point"""
         if len(result) == 1:
@@ -144,8 +145,9 @@ class FoxESSCloudSkill(OVOSSkill):
     def calculate_reportdate(self,result):
         """Function which calcualtes quotes of self use and self consumption"""
 
-    def speakable_date(self,day):
+    def speakable_date(self,today, number):
         """Function which returns a speakable date"""
+        day = today.replace(day=today.day - int(number))
         day = extract_datetime(day, lang=self.lang)
         LOG.info("Content of day in speakable_date: " + str(day))
         day_to_speak = nice_date(day[0],lang=self.lang)
@@ -157,8 +159,8 @@ class FoxESSCloudSkill(OVOSSkill):
         """Returns energy production, consumption and export/import from yesterday"""
         selection = self.rv
         duration = "day"
-        day = self.yesterday(today)
-        result = self.datareport(duration, selection, day)
+        day_str = self.yesterday(today)
+        result = self.datareport(duration, selection, day_str)
         values = self.round3_reportdata(result)
         values = self.prepare_values(selection, values)
         LOG.debug("Values from HANDLE_ENERGY_YESTERDAY intent: " + str(values))
@@ -174,12 +176,12 @@ class FoxESSCloudSkill(OVOSSkill):
         duration = "day"
         number = message.data.get('number')
         LOG.info("'number' is: " + str(number))
-        day = self.optional_day_from_past(today, number)
-        result = self.datareport(duration, selection, day)
+        day_str = self.optional_day_from_past(today, number)
+        result = self.datareport(duration, selection, day_str)
         values = self.round3_reportdata(result)
         values = self.prepare_values(selection, values)
         LOG.debug("Values from HANDLE_ENERGY_OPTIONAL_DAY intent: " + str(values))
-        day_to_speak = self.speakable_date(day)
+        day_to_speak = self.speakable_date(today, number)
         self.speak_dialog('energy_optional_day', {'day': day_to_speak, 'number': number, 'loads': values['loads'], 'gridConsumption': values['gridConsumption'], 'generation': values['generation'], \
                                                     'feedin': values['feedin']})
         
