@@ -93,9 +93,9 @@ class FoxESSCloudSkill(OVOSSkill):
         Returns date of a past day announcing an optional number of past days.
         """
         day = today.replace(day = today.day - int(number))
+        day = today.replace(day = today.day - int(number))
         day = day.strftime("%Y-%m-%d")
         return day
-    
     
     def round3_realdata(self,result):
         """Function rounds long float to 3 digits after decimal point"""
@@ -168,13 +168,16 @@ class FoxESSCloudSkill(OVOSSkill):
         selection = self.rv
         duration = "day"
         number = message.data.get('number')
-        day_str = self.optional_day_from_past(today, number)
-        result = self.datareport(duration, selection, day_str)
-        values = self.round3_reportdata(result)
-        values = self.prepare_values(selection, values)
-        LOG.info("Values from HANDLE_ENERGY_OPTIONAL_DAY intent: " + str(values))
-        self.speak_dialog('energy_optional_day', {'number': number, 'loads': values['loads'], 'gridConsumption': values['gridConsumption'], 'generation': values['generation'], \
-                                                    'dischargeEnergyToTal': values['dischargeEnergyToTal'], 'chargeEnergyToTal': values['chargeEnergyToTal'], 'feedin': values['feedin']})
+        if number < today.day:
+            day_str = self.optional_day_from_past(today, number)
+            result = self.datareport(duration, selection, day_str)
+            values = self.round3_reportdata(result)
+            values = self.prepare_values(selection, values)
+            LOG.info("Values from HANDLE_ENERGY_OPTIONAL_DAY intent: " + str(values))
+            self.speak_dialog('energy_optional_day', {'number': number, 'loads': values['loads'], 'gridConsumption': values['gridConsumption'], 'generation': values['generation'], \
+                                                        'dischargeEnergyToTal': values['dischargeEnergyToTal'], 'chargeEnergyToTal': values['chargeEnergyToTal'], 'feedin': values['feedin']})
+        else:
+            self.speak_dialog('energy_optional_day_error', {'today': today.day})    
         
     @intent_handler('energy_any_day.intent')
     def handle_energy_any_day(self, message):
