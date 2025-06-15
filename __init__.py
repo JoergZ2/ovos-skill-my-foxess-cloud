@@ -143,15 +143,8 @@ class FoxESSCloudSkill(OVOSSkill):
         return result
 
     def calculate_reportdate(self,result):
-        """Function which calcualtes quotes of self use and self consumption"""
+        """Todo: Function which calcualtes quotes of self use and self consumption"""
 
-    def speakable_date(self,today, number):
-        """Function which returns a speakable date"""
-        day = today.replace(day=today.day - int(number))
-        LOG.info("Content of day in speakable_date: " + str(day))
-        day = extract_datetime(day, lang=self.lang)
-        day_to_speak = nice_date(day[0],lang=self.lang)
-        return day_to_speak
     
     #Intents
     @intent_handler('energy_yesterday.intent')
@@ -180,8 +173,7 @@ class FoxESSCloudSkill(OVOSSkill):
         values = self.round3_reportdata(result)
         values = self.prepare_values(selection, values)
         LOG.debug("Values from HANDLE_ENERGY_OPTIONAL_DAY intent: " + str(values))
-        day_to_speak = self.speakable_date(today, number)
-        self.speak_dialog('energy_optional_day', {'day': day_to_speak, 'number': number, 'loads': values['loads'], 'gridConsumption': values['gridConsumption'], 'generation': values['generation'], \
+        self.speak_dialog('energy_optional_day', {'number': number, 'loads': values['loads'], 'gridConsumption': values['gridConsumption'], 'generation': values['generation'], \
                                                     'feedin': values['feedin']})
         
     @intent_handler('energy_any_day.intent')
