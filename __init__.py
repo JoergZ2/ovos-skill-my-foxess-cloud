@@ -187,25 +187,21 @@ class FoxESSCloudSkill(OVOSSkill):
             self.speak_dialog('energy_optional_day', {'number': number, 'loads': values['loads'], 'gridConsumption': values['gridConsumption'], 'generation': values['generation'], \
                                                         'dischargeEnergyToTal': values['dischargeEnergyToTal'], 'chargeEnergyToTal': values['chargeEnergyToTal'], 'feedin': values['feedin']})
         else:
-            LOG.info("Number of requested day must be equal or less than 365.)
+            LOG.info("Number of requested day must be equal or less than 365.")
             self.speak_dialog('energy_optional_day_error', {'today': today.day})    
         
-    @intent_handler('energy_any_day.intent')
-    def handle_energy_any_day(self, message):
-        """Returns energy production, consumption and export/import from a single day in the past < one year"""
+    @intent_handler('energy_last_week.intent')
+    def handle_energy_last_week(self, message):
+        """Returns energy production, consumption and export/import from last week"""
         selection = self.rv
-        duration = "day"
-        day = message.data.get('date')
-        LOG.debug("'date' is: " + str(day))
-        day = extract_datetime(day, lang=self.lang)
-        day_to_speak = nice_date(day[0],lang=self.lang)
-        day = day[0].strftime("%Y-%m-%d")
-        result = self.datareport(duration, selection, day)
+        duration = "week"
+        day_str = self.yesterday(today)
+        result = self.datareport(duration, selection, day_str)
         values = self.round3_reportdata(result)
         values = self.prepare_values(selection, values)
-        LOG.debug("Values from HANDLE_ENERGY_ANY_DAY intent: " + str(values))
-        self.speak_dialog('values_from_past', {'day_to_speak': day_to_speak, 'loads': values['loads'], 'gridConsumption': values['gridConsumption'], 'generation': values['generation'], \
-                                                    'feedin': values['feedin']})
+        LOG.info("Values from HANDLE_ENERGY_LAST_WEEK intent: " + str(values))
+        self.speak_dialog('energy_last_week', {'loads': values['loads'], 'gridConsumption': values['gridConsumption'], 'generation': values['generation'], \
+                                                'dischargeEnergyToTal': values['dischargeEnergyToTal'], 'chargeEnergyToTal': values['chargeEnergyToTal'], 'feedin': values['feedin']})
 
     @intent_handler('current_pvpower.intent')
     def handle_current_pvpower(self, message):
