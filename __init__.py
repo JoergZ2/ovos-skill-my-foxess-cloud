@@ -9,7 +9,7 @@ import datetime as dt
 from threading import Event
 import foxesscloud.openapi as f
 import json
-#Just a comment
+##Just a comment
 today = dt.date.today()
 power_vars = f.power_vars
 battery_vars = f.battery_vars
