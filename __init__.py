@@ -72,8 +72,8 @@ class FoxESSCloudSkill(OVOSSkill):
         #result = json.loads(result)
         return result
     
-    def datareport(self,duration, selection, day):
-        result = f.get_report(duration, day,selection,2)
+    def datareport(self,duration, selection, summary, day):
+        result = f.get_report(duration, day,selection,summary)
         return result
 
     #Helpers
@@ -188,10 +188,11 @@ class FoxESSCloudSkill(OVOSSkill):
         """Returns energy production, consumption and export/import from a single day in the past <= 365 (days)"""
         selection = self.rv
         duration = "day"
+        summary = 2
         number = int(message.data.get('number'))
         if number <= 365:
             day_str = self.optional_day_from_past(today, number)
-            result = self.datareport(duration, selection, day_str)
+            result = self.datareport(duration, selection, summary, day_str)
             values = self.round3_reportdata(result)
             values = self.prepare_values(selection, values)
             LOG.debug("Values from HANDLE_ENERGY_OPTIONAL_DAY intent: " + str(values))
@@ -206,8 +207,9 @@ class FoxESSCloudSkill(OVOSSkill):
         """Returns energy production, consumption and export/import from last week"""
         selection = self.rv
         duration = "week"
+        summary = 1
         day_str = self.previous_week_last_day(today)
-        result = self.datareport(duration, selection, day_str)
+        result = self.datareport(duration, selection, summary, day_str)
         LOG.info("Result from HANDLE_ENERGY_LAST_WEEK intent: " + str(result))
         values = self.round3_reportdata(result)
         values = self.prepare_values(selection, values)
