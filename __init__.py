@@ -142,7 +142,7 @@ class FoxESSCloudSkill(OVOSSkill):
         while i < len(result):
             if len(result[i]['values']) > 0:
                 for ii in result[i]['values']:
-                    result[i]['values'][ii] = round(result[i]['values'][ii], 3)
+                    ii = round([ii], 3)
             if result[i]['total'] > 0:
                 result[i]['total'] = round(result[i]['total'], 3)
             i += 1
