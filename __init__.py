@@ -72,6 +72,10 @@ class FoxESSCloudSkill(OVOSSkill):
         #result = json.loads(result)
         return result
     
+    def datareport(self,duration, selection, day):
+        result = f.get_report(duration, day,selection,2)
+        return result
+
     #Helpers
     def current_day(self, today):
         """
@@ -85,6 +89,17 @@ class FoxESSCloudSkill(OVOSSkill):
         Returns date of yesterday as string.
         """
         day = today.replace(day=today.day-1)
+        day = day.strftime("%Y-%m-%d")
+        return day
+
+    def previous_week_last_day(self, today):
+        """
+        Returns date of last day (Sunday) of previous week as string.
+        """
+        day = today.weekday()
+        day = dt.timedelta(days=day)
+        day = today - day
+        day = day.replace(day=day.day-1)
         day = day.strftime("%Y-%m-%d")
         return day
 
@@ -148,10 +163,6 @@ class FoxESSCloudSkill(OVOSSkill):
                 result.update({values[i]['variable']: str(values[i]['total'])})
         return result
 
-    def datareport(self,duration, selection, day):
-        result = f.get_report(duration, day,selection,2)
-        return result
-
     def calculate_reportdate(self,result):
         """Todo: Function which calcualtes quotes of self use and self consumption"""
 
@@ -195,11 +206,11 @@ class FoxESSCloudSkill(OVOSSkill):
         """Returns energy production, consumption and export/import from last week"""
         selection = self.rv
         duration = "week"
-        day_str = self.yesterday(today)
+        day_str = self.previous_week_last_day(today)
         result = self.datareport(duration, selection, day_str)
+        LOG.info("Result from HANDLE_ENERGY_LAST_WEEK intent: " + str(result))
         values = self.round3_reportdata(result)
         values = self.prepare_values(selection, values)
-        LOG.info("Values from HANDLE_ENERGY_LAST_WEEK intent: " + str(values))
         self.speak_dialog('energy_last_week', {'loads': values['loads'], 'gridConsumption': values['gridConsumption'], 'generation': values['generation'], \
                                                 'dischargeEnergyToTal': values['dischargeEnergyToTal'], 'chargeEnergyToTal': values['chargeEnergyToTal'], 'feedin': values['feedin']})
 
