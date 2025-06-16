@@ -90,9 +90,20 @@ class FoxESSCloudSkill(OVOSSkill):
 
     def optional_day_from_past(self, today, number):
         """
-        Returns date of a past day announcing an optional number of past days.
+        Returns date of a past day announcing an optional number of past days. Number \
+        must be less than 365.
         """
-        day = today.replace(day = today.day - number)
+        number = int(number)
+        today_ordinal = today.timetuple().tm_yday
+        current_year = today.year
+        if number < today_ordinal:
+            year = current_year
+            number = today_ordinal - number
+        if number >= today_ordinal:
+            year = current_year - 1
+            number = today_ordinal - number + 365
+        day = dt.date.fromordinal(number)
+        day = day.replace(year=year)
         day = day.strftime("%Y-%m-%d")
         return day
     
@@ -163,11 +174,11 @@ class FoxESSCloudSkill(OVOSSkill):
 
     @intent_handler('energy_optional_day.intent')
     def handle_energy_optional_day(self, message):
-        """Returns energy production, consumption and export/import from a single day in the past < one year"""
+        """Returns energy production, consumption and export/import from a single day in the past <= 365 (days)"""
         selection = self.rv
         duration = "day"
         number = int(message.data.get('number'))
-        if number < today.day:
+        if number <= 365:
             day_str = self.optional_day_from_past(today, number)
             result = self.datareport(duration, selection, day_str)
             values = self.round3_reportdata(result)
@@ -176,7 +187,7 @@ class FoxESSCloudSkill(OVOSSkill):
             self.speak_dialog('energy_optional_day', {'number': number, 'loads': values['loads'], 'gridConsumption': values['gridConsumption'], 'generation': values['generation'], \
                                                         'dischargeEnergyToTal': values['dischargeEnergyToTal'], 'chargeEnergyToTal': values['chargeEnergyToTal'], 'feedin': values['feedin']})
         else:
-            LOG.info("Number of requested day must be smaller than number of current day. Number musst be smaller than " + str(today.day))
+            LOG.info("Number of requested day must be equal or less than 365.)
             self.speak_dialog('energy_optional_day_error', {'today': today.day})    
         
     @intent_handler('energy_any_day.intent')
@@ -185,7 +196,7 @@ class FoxESSCloudSkill(OVOSSkill):
         selection = self.rv
         duration = "day"
         day = message.data.get('date')
-        LOG.info("'date' is: " + str(day))
+        LOG.debug("'date' is: " + str(day))
         day = extract_datetime(day, lang=self.lang)
         day_to_speak = nice_date(day[0],lang=self.lang)
         day = day[0].strftime("%Y-%m-%d")
