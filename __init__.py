@@ -133,7 +133,19 @@ class FoxESSCloudSkill(OVOSSkill):
             i += 1
         return result
     
-    def round3_reportdata(self,result):
+    def round_and_prepare_reportdata(self, duration, result):
+        if duration == "week" or duration == "month" or duration == "year":
+            for i in range(len(result)):
+                rounded = round(result[i]['sum'], 3)
+                result[i]['sum'] = str(rounded).replace(".",self.lang_specifics['decimal_char'])
+            return result
+        if duration == "day":
+            for i in range(len(result)):
+                rounded = round(result[i]['total'], 3)
+                result[i]['total'] = str(rounded).replace(".",self.lang_specifics['decimal_char'])
+            return result
+
+    def round3_reportdata(self, duration, result):
         """Function rounds long float to 3 digits after decimal point"""
         if len(result) == 1:
             result[0]['total'] = round(result[0]['total'], 3)
@@ -142,7 +154,7 @@ class FoxESSCloudSkill(OVOSSkill):
         while i < len(result):
             if len(result[i]['values']) > 0:
                 for ii in result[i]['values']:
-                    ii = round([ii], 3)
+                    ii = round(ii, 3)
             if result[i]['total'] > 0:
                 result[i]['total'] = round(result[i]['total'], 3)
             i += 1
@@ -176,7 +188,7 @@ class FoxESSCloudSkill(OVOSSkill):
         duration = "day"
         day_str = self.yesterday(today)
         result = self.datareport(duration, selection, day_str)
-        values = self.round3_reportdata(result)
+        values = self.round3_reportdata(duration, result)
         values = self.prepare_values(selection, values)
         LOG.debug("Values from HANDLE_ENERGY_YESTERDAY intent: " + str(values))
         self.speak_dialog('energy_yesterday', {'chargeEnergyTotal': values['chargeEnergyToTal'], \
@@ -194,7 +206,7 @@ class FoxESSCloudSkill(OVOSSkill):
         if number <= 365:
             day_str = self.optional_day_from_past(today, number)
             result = self.datareport(duration, selection, summary, day_str)
-            values = self.round3_reportdata(result)
+            values = self.round3_reportdata(duration, result)
             values = self.prepare_values(selection, values)
             LOG.debug("Values from HANDLE_ENERGY_OPTIONAL_DAY intent: " + str(values))
             self.speak_dialog('energy_optional_day', {'number': number, 'loads': values['loads'], 'gridConsumption': values['gridConsumption'], 'generation': values['generation'], \
@@ -208,12 +220,13 @@ class FoxESSCloudSkill(OVOSSkill):
         """Returns energy production, consumption and export/import from last week"""
         selection = self.rv
         duration = "week"
-        summary = 1
+        summary = 2
         day_str = self.previous_week_last_day(today)
         result = self.datareport(duration, selection, summary, day_str)
-        LOG.info("Result from HANDLE_ENERGY_LAST_WEEK intent: " + str(result))
-        values = self.round3_reportdata(result)
-        values = self.prepare_values(selection, values)
+        #values = self.round3_reportdata(duration, result)
+        #values = self.prepare_values(selection, values)
+        values = self.round_and_prepare_reportdata(duration, result)
+        LOG.info("Result from HANDLE_ENERGY_LAST_WEEK intent: " + str(values))
         self.speak_dialog('energy_last_week', {'loads': values['loads'], 'gridConsumption': values['gridConsumption'], 'generation': values['generation'], \
                                                 'dischargeEnergyToTal': values['dischargeEnergyToTal'], 'chargeEnergyToTal': values['chargeEnergyToTal'], 'feedin': values['feedin']})
 
