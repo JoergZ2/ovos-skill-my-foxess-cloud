@@ -134,15 +134,22 @@ class FoxESSCloudSkill(OVOSSkill):
         return result
     
     def round_and_prepare_reportdata(self, duration, result):
+        result = {}
         if duration == "week" or duration == "month" or duration == "year":
             for i in range(len(result)):
+                key = result[i]['variable']
                 rounded = round(result[i]['sum'], 3)
                 result[i]['sum'] = str(rounded).replace(".",self.lang_specifics['decimal_char'])
+                value = result[i]['sum']
+                result.update({key: value})
             return result
         if duration == "day":
             for i in range(len(result)):
+                key = result[i]['variable']
                 rounded = round(result[i]['total'], 3)
                 result[i]['total'] = str(rounded).replace(".",self.lang_specifics['decimal_char'])
+                value = result[i]['total']
+                result.update({key: value})
             return result
 
     def round3_reportdata(self, duration, result):
@@ -225,7 +232,7 @@ class FoxESSCloudSkill(OVOSSkill):
         result = self.datareport(duration, selection, summary, day_str)
         #values = self.round3_reportdata(duration, result)
         #values = self.prepare_values(selection, values)
-        values = self.round_and_prepare_reportdata(duration, result)
+        values = self.round_and_prepare_reportdata(selection, duration, result)
         LOG.info("Result from HANDLE_ENERGY_LAST_WEEK intent: " + str(values))
         self.speak_dialog('energy_last_week', {'loads': values['loads'], 'gridConsumption': values['gridConsumption'], 'generation': values['generation'], \
                                                 'dischargeEnergyToTal': values['dischargeEnergyToTal'], 'chargeEnergyToTal': values['chargeEnergyToTal'], 'feedin': values['feedin']})
