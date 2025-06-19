@@ -194,15 +194,14 @@ class FoxESSCloudSkill(OVOSSkill):
         """Returns energy production, consumption and export/import from yesterday"""
         selection = self.rv
         duration = "day"
+        summary = 2
         day_str = self.yesterday(today)
-        result = self.datareport(duration, selection, day_str)
-        #values = self.round3_reportdata(duration, result)
-        #values = self.prepare_values(selection, values)
+        result = self.datareport(duration, selection, summary, day_str)
         values = self.round_and_prepare_reportdata(duration, result)
         LOG.debug("Values from HANDLE_ENERGY_YESTERDAY intent: " + str(values))
-        self.speak_dialog('energy_yesterday', {'chargeEnergyTotal': values['chargeEnergyToTal'], \
+        self.speak_dialog('energy_yesterday', {'chargeEnergyToTal': values['chargeEnergyToTal'], \
                                                'loads': values['loads'], 'gridConsumption': values['gridConsumption'], \
-                                                'dischargeEnergyTotal': values['dischargeEnergyToTal'], 'generation': values['generation'], \
+                                                'dischargeEnergyToTal': values['dischargeEnergyToTal'], 'generation': values['generation'], \
                                                     'feedin': values['feedin'], 'PVEnergyTotal': values['PVEnergyTotal']})
 
     @intent_handler('energy_optional_day.intent')
@@ -215,8 +214,9 @@ class FoxESSCloudSkill(OVOSSkill):
         if number <= 365:
             day_str = self.optional_day_from_past(today, number)
             result = self.datareport(duration, selection, summary, day_str)
-            values = self.round3_reportdata(duration, result)
-            values = self.prepare_values(selection, values)
+            #values = self.round3_reportdata(duration, result)
+            #values = self.prepare_values(selection, values)
+            values = self.round_and_prepare_reportdata(duration, result)
             LOG.debug("Values from HANDLE_ENERGY_OPTIONAL_DAY intent: " + str(values))
             self.speak_dialog('energy_optional_day', {'number': number, 'loads': values['loads'], 'gridConsumption': values['gridConsumption'], 'generation': values['generation'], \
                                                         'dischargeEnergyToTal': values['dischargeEnergyToTal'], 'chargeEnergyToTal': values['chargeEnergyToTal'], 'feedin': values['feedin']})
