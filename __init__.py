@@ -72,8 +72,8 @@ class FoxESSCloudSkill(OVOSSkill):
         #result = json.loads(result)
         return result
     
-    def datareport(self,duration, selection, summary, day):
-        result = f.get_report(duration, day,selection,summary)
+    def datareport(self,duration, selection, summary, day_str):
+        result = f.get_report(duration, day_str,selection,summary)
         return result
 
     #Helpers
