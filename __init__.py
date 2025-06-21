@@ -332,11 +332,14 @@ class FoxESSCloudSkill(OVOSSkill):
         """Returns sums of prodauction, loads and export/import from a single day in the past < one year"""
         selection = self.rv
         duration = "day"
+        summary = 2
         day = message.data.get('day')
-        day = extract_datetime(day, lang="de")
+        day = extract_datetime(day, lang=self.lang)
         day = day[0].strftime("%Y-%m-%d")
-        result = self.datareport(duration, selection, day)
-        values = self.round3_reportdata(result)
-        values = self.prepare_values(selection, values)
-        LOG.info("Values from HANDLE_PAST_VALUES intent: " + str(values))
-        #self.speak_dialog('values_from_past', {"value": value})
+        day_to_speak = dt.datetime.strptime(day, "%Y-%m-%d")
+        day_to_speak = nice_date(day_to_speak, lang=self.lang)
+        result = self.datareport(duration, selection, summary, day)
+        values = self.round_and_prepare_reportdata(duration, result)
+        LOG.debug("Values from HANDLE_PAST_VALUES intent: " + str(values))
+        self.speak_dialog('values_of_date', {'day': day_to_speak,'gridConsumption': values['gridConsumption'], 'generation': values['generation'], \
+                                                            'feedin': values['feedin'], 'loads': values['loads']})
