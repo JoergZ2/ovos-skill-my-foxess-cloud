@@ -128,7 +128,7 @@ class FoxESSCloudSkill(OVOSSkill):
         """Function rounds long float to 3 digits after decimal point and prepares a dict of values for TTS"""
         new_result = {}
         if len(result) == 1:
-            result = round(result[0]['value'], 3)
+            result = str(round(result[0]['value'], 3)).replace(".",self.lang_specifics['decimal_char'])
             return result
         i = 0
         while i < len(result):
@@ -265,8 +265,6 @@ class FoxESSCloudSkill(OVOSSkill):
         """Returns power export data"""
         selection = "feedinPower"
         result = self.realdata(selection)
-        #value = self.round3_realdata(result)
-        #value = str(value).replace(".",self.lang_specifics['decimal_char'])
         value = self.round_and_prepare_realdata(result)
         self.speak_dialog('current_delivery', {'energy_delivery': value})
 
@@ -275,8 +273,7 @@ class FoxESSCloudSkill(OVOSSkill):
         """Returns current energy consumption data"""
         selection = "loadsPower"
         result = self.realdata(selection)
-        value = self.round3_realdata(result)
-        value = str(value).replace(".",self.lang_specifics['decimal_char'])
+        value = self.round_and_prepare_realdata(result)
         self.speak_dialog('current_loads', {'current_loads': value})
 
     @intent_handler('current_bat_level.intent')
@@ -292,8 +289,7 @@ class FoxESSCloudSkill(OVOSSkill):
         """Returns current power import from grid"""
         selection = "gridConsumptionPower"
         result = self.realdata(selection)
-        value = self.round3_realdata(result)
-        value = str(value).replace(".",self.lang_specifics['decimal_char'])
+        value = self.round_and_prepare_realdata(result)
         self.speak_dialog('current_grid_consumption', {'grid_consumption': value})
     
     @intent_handler('current_efficiency_of_inverter.intent')
@@ -302,8 +298,7 @@ class FoxESSCloudSkill(OVOSSkill):
         selection = ["pvPower", "generationPower", "batChargePower", "feedinPower"]
         result = self.realdata(selection)
         efficiency = round((result[1]['value']+result[2]['value']+result[3]['value'])/result[0]['value']*100, 0)
-        values = self.round3_realdata(result)
-        values = self.prepare_values(selection, values)
+        values = self.round_and_prepare_realdata(result)
         self.speak_dialog('current_efficiency_of_inverter', {'efficiency': efficiency})
 
     @intent_handler('current_inv_bat_charge.intent')
@@ -320,8 +315,7 @@ class FoxESSCloudSkill(OVOSSkill):
         """Returns current data of prduction, consumption, state of battery..."""
         selection = ['generationPower', 'feedinPower', 'loadsPower', 'gridConsumptionPower', 'batChargePower', 'batDischargePower', 'pvPower']
         result = self.realdata(selection)
-        values = self.round3_realdata(result)
-        values = self.prepare_values(selection, values)
+        values = self.round_and_prepare_realdata(result)
         self.speak_dialog('current_energy_balance', {'pvPower': values['pvPower'], 'batChargePower': values['batChargePower'], \
                                                      'loadsPower': values['loadsPower'], 'gridConsumptionPower': values['gridConsumptionPower'], \
                                                         'batDischargePower': values['batDischargePower'], 'generationPower': values['generationPower'], \
