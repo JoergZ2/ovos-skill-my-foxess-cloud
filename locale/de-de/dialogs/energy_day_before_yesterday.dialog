@@ -1,0 +1,1 @@
+vorgestern wurden {generation} Kilowattstunden erzeugt. Davon sind {loads} selbst verbraucht und {feedin} ins netz geleitet worden. Vom Netz sind {gridConsumption} Kilowattstunden bezogen worden und die Batterie wurde mit {chargeEnergyToTal} K W H geladen und hat {dischargeEnergyToTal} abgegeben.

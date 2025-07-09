@@ -239,7 +239,7 @@ class FoxESSCloudSkill(OVOSSkill):
         result = self.datareport(duration, selection, summary, day_str)
         values = self.round_and_prepare_reportdata(duration, result)
         LOG.debug("Values from HANDLE_ENERGY_YESTERDAY intent: " + str(values))
-        self.speak_dialog('energy_yesterday', {'chargeEnergyToTal': values['chargeEnergyToTal'], \
+        self.speak_dialog('energy_day_before_yesterday', {'chargeEnergyToTal': values['chargeEnergyToTal'], \
                                                'loads': values['loads'], 'gridConsumption': values['gridConsumption'], \
                                                 'dischargeEnergyToTal': values['dischargeEnergyToTal'], 'generation': values['generation'], \
                                                     'feedin': values['feedin'], 'PVEnergyTotal': values['PVEnergyTotal']})
