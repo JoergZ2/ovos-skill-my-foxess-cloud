@@ -97,7 +97,7 @@ class FoxESSCloudSkill(OVOSSkill):
         """
         Returns date of day before yesterday as string.
         """
-        day = today.replace(day=today.day-2
+        day = today.replace(day=today.day-2)
         day = day.strftime("%Y-%m-%d")
         return day
 
