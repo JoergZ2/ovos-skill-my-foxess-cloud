@@ -93,6 +93,14 @@ class FoxESSCloudSkill(OVOSSkill):
         day = day.strftime("%Y-%m-%d")
         return day
 
+    def day_before_yesterday(self, today):
+        """
+        Returns date of day before yesterday as string.
+        """
+        day = today.replace(day=today.day-2
+        day = day.strftime("%Y-%m-%d")
+        return day
+
     def previous_week_last_day(self, today):
         """
         Returns date of last day (Sunday) of previous week as string.
@@ -213,6 +221,21 @@ class FoxESSCloudSkill(OVOSSkill):
         duration = "day"
         summary = 2
         day_str = self.yesterday(today)
+        result = self.datareport(duration, selection, summary, day_str)
+        values = self.round_and_prepare_reportdata(duration, result)
+        LOG.debug("Values from HANDLE_ENERGY_YESTERDAY intent: " + str(values))
+        self.speak_dialog('energy_yesterday', {'chargeEnergyToTal': values['chargeEnergyToTal'], \
+                                               'loads': values['loads'], 'gridConsumption': values['gridConsumption'], \
+                                                'dischargeEnergyToTal': values['dischargeEnergyToTal'], 'generation': values['generation'], \
+                                                    'feedin': values['feedin'], 'PVEnergyTotal': values['PVEnergyTotal']})
+
+    @intent_handler('energy_day_before_yesterday.intent')
+    def handle_energy_day_before_yesterday(self, message):
+        """Returns energy production, consumption and export/import from yesterday"""
+        selection = self.rv
+        duration = "day"
+        summary = 2
+        day_str = self.day_before_yesterday(today)
         result = self.datareport(duration, selection, summary, day_str)
         values = self.round_and_prepare_reportdata(duration, result)
         LOG.debug("Values from HANDLE_ENERGY_YESTERDAY intent: " + str(values))
