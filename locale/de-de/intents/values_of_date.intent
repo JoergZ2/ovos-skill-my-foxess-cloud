@@ -1,3 +1,3 @@
 solardaten vom {day}
 stromerzeugung am {day}
-energiebilanz (am|vom) {date}
+energiebilanz (am|vom) {day}
