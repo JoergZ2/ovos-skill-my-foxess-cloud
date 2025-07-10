@@ -1,0 +1,1 @@
+Last week, a total of {generation} kilowatt-hours were generated. Of this, {loads} were consumed internally and {feedin} were fed into the grid. {gridConsumption} kilowatt-hours were drawn from the grid, and the battery was charged with {chargeEnergyToTal} kWh and discharged {dischargeEnergyToTal}.

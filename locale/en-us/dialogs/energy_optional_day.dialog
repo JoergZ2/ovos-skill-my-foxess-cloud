@@ -1,0 +1,1 @@
+{number} days ago, {generation} kilowatt hours were generated. Of these, {loads} were consumed and {feedin} were fed into the grid. Kilowatt hours were drawn from the grid {gridConsumption} and the battery was charged with {chargeEnergyToTal} K W H and delivered {dischargeEnergyToTal}.

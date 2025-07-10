@@ -1,17 +1,21 @@
 # ovos-skill-my-foxess-cloud
 OVOS skill to fetch data from FoxESS cloud.
 ## Summary
-This skill currently only uses a small part of the information collected by the FoxESS cloud. At present, only current data is retrieved. Retrieving cumulative data from the past is planned but not yet implemented. English and German intents and dialogs have been created for the skill. Other languages must be added yourself.
+This skill provides an announcement of current (real data) or historical aggregated data (report data) from a FoxESS photovoltaic system with a H3 series inverter. English and German intents and dialogs have been created for the skill. Other languages must be added yourself.
+## Requirements
+You must have an account on www.foxesscloud.com. This is usually set up by the installer. In your user profile, go to API Management and generate an API key. You'll also need the inverter's serial number. You can also obtain this from your installer or from the documentation provided. You must enter key and serial number in the skill setup file (see below). Python requirements are installed during installing this skill. Installing with ```pip install git+https://github.com/JoergZ2/ovos-skill-my-foxess-cloud```.
 ## Which intents are used (examples)
 "What does the photovoltaic system deliver (just|current|)" - current power production from solar panels in kW  
 "How much electricity is (currently|) (used|consumed|in the house|by us|)" - current consumption of all devices in kW  
 "Current feed-in power" - current export to grid in kW  
-"(What is the|) efficiency of the inverter" - calculates the lost of the system.  
-There are some more intents. You can find then in ```locale/en-us/intents``` folder.
+"(What is the|) efficiency of the inverter" - calculates the lost of the system.
+"Energy balance from yesterday" - aggregated values of the previous day.
+"Energy balance from {date}" - aggregated of the day in question (within the last year).
+There are more intents. You can find then in ```locale/en-us/intents``` folder.
 ## Known issues
 During installing the neccessary libraries from a fresh version of numpy (2.2.5) ist installed. This produced a conflict message with ovos-classifiers. The maintainer of OVOS told me that doesn't matter.
 ## Setup
-You have to edit settings.json of the skill. You will find it in your config folder in ```...skills/ovos-skill-my-foxess-cloud.joergz2/settings.json``` It looks like:
+You have to edit settings.json of the skill. You will find it in your config folder in ```~/.config/mycroft/skills/ovos-skill-my-foxess-cloud.joergz2/settings.json``` It looks like:
 ```
 {
     "__mycroft_skill_firstrun": false,
@@ -34,3 +38,10 @@ https://github.com/macxq/foxess-ha/wiki/understand-PV-string-power-generation-us
 https://foxesscommunity.com/  
 ## Questions and issues
 Use "Issues" from this github pages.
+## Further explanations
+A lot of data is collected in the FoxESS cloud. There are currently 109 parameters in total, which are reported to the cloud by the inverter every 5 minutes and stored there for at least 1 year. As it depends on the respective configuration which of these parameters are used (and for reasons of possible combinations for queries), the skill only uses a selection of general and in most cases relevant parameters such as real-time data on the power of the PV system, electricity consumption in the house, grid consumption or grid feed-in and battery charging or discharging. This data can be called up as a whole or individually. This data is given in kilowatts (kW). Incidentally, "real-time" means the last data transmission within the last 5 minutes.
+A second group of intents provides information on energy totals in kilowatt hours (kWh) in relation to a time period. The aggregated values from yesterday, the day before yesterday or any day within the past year (calculated from the date of the current day) can be called up.
+Time periods can be grouped (last week, last month, last year). The script for communication with the FoxessCloud interprets week as a period of 7 days before the transmitted date and including the specified date. Example: The intent "Energy balance of the week from 07.02.2025" would deliver the data from 01.02.2025 00:00 to 07.02.2025 23:59.
+The OVOS date_parser and the ovos_skill_date_time are very good but not perfect. In German, there are definitely major problems with formulations such as "gestern", "vorgestern" or (probably only possible in German) "vorvorgestern" ("two days before yesterday"). The skill or parser does not seem to be able to handle the past well. The skill solves this problem with the help of corresponding intents and the associated *.intent files, in which the required trigger words are stored. I do not know in which languages there are comparable special words for (relative) time specifications.
+The interpretation of specifically named days works reliably in this respect. However, these must be spoken in the long form: "What is the energy balance on February 2, 2025". This is not possible: "What is the energy balance on 2025-02-02" and other short forms of the date.
+Feel free to make a fork, expand, and improve this repository.
