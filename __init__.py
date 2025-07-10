@@ -357,6 +357,7 @@ class FoxESSCloudSkill(OVOSSkill):
         day_to_speak = dt.datetime.strptime(day, "%Y-%m-%d")
         day_to_speak = nice_date(day_to_speak, lang=self.lang)
         result = self.datareport(duration, selection, summary, day)
+        LOG.info("Result from HANDLE_PAST_VALUES intent: " + str(result))
         values = self.round_and_prepare_reportdata(duration, result)
         LOG.debug("Values from HANDLE_PAST_VALUES intent: " + str(values))
         self.speak_dialog('values_of_date', {'day': day_to_speak,'gridConsumption': values['gridConsumption'], 'generation': values['generation'], \
