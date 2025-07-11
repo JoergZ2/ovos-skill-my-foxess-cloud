@@ -352,10 +352,11 @@ class FoxESSCloudSkill(OVOSSkill):
         summary = 2
         day = message.data.get('day')
         day = extract_datetime(day, lang=self.lang)
+        orig_day = day
         day = day[0].strftime("%Y-%m-%d")
         LOG.info("Day from HANDLE_PAST_VALUES intent: " + day)
-        day_to_speak = dt.datetime.strptime(day, "%Y-%m-%d")
-        day_to_speak = nice_date(day_to_speak, lang=self.lang)
+        #day_to_speak = dt.datetime.strptime(day, "%Y-%m-%d")
+        day_to_speak = nice_date(orig_day[0], lang=self.lang)
         result = self.datareport(duration, selection, summary, day)
         LOG.info("Result from HANDLE_PAST_VALUES intent: " + str(result))
         values = self.round_and_prepare_reportdata(duration, result)
