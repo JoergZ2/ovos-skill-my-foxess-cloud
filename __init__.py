@@ -346,7 +346,7 @@ class FoxESSCloudSkill(OVOSSkill):
         
     @intent_handler('values_of_date.intent')
     def handle_past_values(self, message):
-        """Returns sums of prodauction, loads and export/import from a single day in the past < one year"""
+        """Returns sums of production, loads and export/import from a single day in the past < one year"""
         selection = self.rv
         duration = "day"
         summary = 2
@@ -354,11 +354,9 @@ class FoxESSCloudSkill(OVOSSkill):
         day = extract_datetime(day, lang=self.lang)
         orig_day = day
         day = day[0].strftime("%Y-%m-%d")
-        LOG.info("Day from HANDLE_PAST_VALUES intent: " + day)
         #day_to_speak = dt.datetime.strptime(day, "%Y-%m-%d")
         day_to_speak = nice_date(orig_day[0], lang=self.lang)
         result = self.datareport(duration, selection, summary, day)
-        LOG.info("Result from HANDLE_PAST_VALUES intent: " + str(result))
         values = self.round_and_prepare_reportdata(duration, result)
         LOG.debug("Values from HANDLE_PAST_VALUES intent: " + str(values))
         self.speak_dialog('values_of_date', {'day': day_to_speak,'gridConsumption': values['gridConsumption'], 'generation': values['generation'], \
