@@ -47,6 +47,6 @@ Time periods can be grouped (last week, last month, last year). The script for c
 
 The OVOS date_parser and the ovos_skill_date_time are very good but not perfect. In German, there are definitely major problems with formulations such as "gestern" (yesterday), "vorgestern" (day before yesterday) or (probably only possible in German language) "vorvorgestern" (= "two days before yesterday"). The skill or parser does not seem to be able to handle the past well. The skill solves this problem with the help of corresponding intents, in which the required trigger words are stored, and specified functions which perform the calculation of the date. I do not know in which languages there are comparable special words for (relative) time specifications.
 
-The interpretation of specifically named days works reliably in this respect. In English an utterance as "March 2 20 25" is well recognized. However - especielly in German - these must be spoken in the long form: "Energiebilanz vom 2. März 2025". This is not possible: "What is the energy balance on 2025-02-02" and other short forms of the date.
+The interpretation of specifically named days works reliably in this respect. In English an utterance as "March 2 20 25" is well recognized. However - especielly in German - these must be spoken in the long form: "Energiebilanz vom 2. März 2025". This is not possible: "Energiebilanz vom 2.3.2025 ('vom zweiten dritten 2025')" and other short forms of the date.
 
 Feel free to make a fork, expand, and improve this repository.
