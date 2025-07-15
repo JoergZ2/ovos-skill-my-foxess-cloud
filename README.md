@@ -39,7 +39,11 @@ https://foxesscommunity.com/
 ## Questions and issues
 Use "Issues" from this github pages.
 ## Further explanations
-A lot of data is collected in the FoxESS cloud. There are currently 109 parameters in total, which are reported to the cloud by the inverter every 5 minutes and stored there for at least 1 year. As it depends on the respective configuration which of these parameters are used (and for reasons of possible combinations for queries), the skill only uses a selection of general and in most cases relevant parameters such as real-time data on the power of the PV system, electricity consumption in the house, grid consumption or grid feed-in and battery charging or discharging. This data can be called up as a whole or individually. This data is given in kilowatts (kW). Incidentally, "real-time" means the last data transmission within the last 5 minutes.
+A lot of data is collected in the FoxESS cloud. There are currently 109 parameters in total, which are reported to the cloud by the inverter every 5 minutes and stored there for at least 1 year. 
+
+Fundamentally, the question arises as to how much information someone can actually absorb when it's spoken. Some queries that report on seven parameters are already too many for me.
+
+As it depends on the respective configuration which of these parameters are used (and for reasons of possible combinations for queries), the skill only uses a selection of general and in most cases relevant parameters such as real-time data on the power of the PV system, electricity consumption in the house, grid consumption or grid feed-in and battery charging or discharging. This data can be called up as a whole or individually. This data is given in kilowatts (kW). Incidentally, "real-time" means the last data transmission within the last 5 minutes.
 
 A second group of intents provides information on energy totals in kilowatt hours (kWh) in relation to a time period. The aggregated values from yesterday, the day before yesterday or any day within the past year (calculated from the date of the current day) can be called up.
 
